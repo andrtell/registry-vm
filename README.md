@@ -1,11 +1,11 @@
 # Registry VM
 VM with Docker Registry.
 
-## Before you start
+## Traefik VM
 
-Setup your VM using [traefik-vm](https://github.com/andrtell/traefik-vm).
+Setup you VM using [traefik-vm](https://github.com/andrtell/traefik-vm).
 
-Then:
+## Ansible VM
 
 Create the file `inventory.yaml`.
 
@@ -13,7 +13,7 @@ Create the file `inventory.yaml`.
 ungrouped:
   hosts:
     vm:
-      ansible_host: <HOST>
+      ansible_host: vm01
 ```
 
 Create the file `vars.yaml`.
@@ -22,20 +22,12 @@ Create the file `vars.yaml`.
 registry_domain: registry.example.com
 ```
 
-## Setup VM
+## Registry VM Setup
 
 Run the playbook `playbooks/01_registry.yaml`.
 
 ```
-$ ssh-add ~/.ssh/id_ed25519-agent
-```
-
-```
-$ ansible-playbook -i inventory.yaml \
-    --private-key ~/.ssh/id_ed25519-agent \
-    --extra-vars "basic_auth_users=$(htpasswd -Bbn myuser mypassword)" \
-    --extra-vars "@vars.yaml" \
-    playbooks/01_registry.yaml
+$ ansible-playbook -i inventory.yaml --extra-vars "basic_auth_users=$(htpasswd -Bbn myuser mypassword)" --extra-vars "@vars.yaml" playbooks/01_registry.yaml
 ```
 
 ## Podman
@@ -43,17 +35,36 @@ $ ansible-playbook -i inventory.yaml \
 Login to your registry.
 
 ```
-podman login registry.example.com
+$ podman login registry.example.com
 ```
 
 ## Images
 
-Example workflow
+*Example workflow*
+
+Push an image to the new registry.
 
 ```
 $ podman pull docker.io/httpd
+```
+
+```
 $ podman tag docker.io/httpd registry.example.com/httpd
+```
+
+```
 $ podman push registry.example.com/httpd
-$ podman search registry.example.com/httpd
-$ podman pull registry.example.com/httpd
+```
+
+Deploy the image.
+
+```
+$ podman -r -c vm01 login registry.example.com
+```
+
+```
+$ podman -r -c vm01 run -d --rm --name httpd --network traefik \
+    --label 'traefik.enable=true' \
+    --label 'traefik.http.routers.myrouter.rule=PathPrefix(`/`)' \
+    registry.example.com/httpd
 ```
