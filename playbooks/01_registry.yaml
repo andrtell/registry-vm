@@ -1,5 +1,6 @@
 - name: Setup & start the registry service
-  hosts: any
+
+  hosts: all
   remote_user: agent
 
   vars:

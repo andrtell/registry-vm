@@ -23,7 +23,11 @@ ExecStart=/usr/bin/podman run \
   --label 'traefik.enable=true' \
   --label 'traefik.http.routers.registry.entrypoints=websecure' \
   --label 'traefik.http.routers.registry.rule=Host(`{{ registry_domain }}`)' \
-  --label 'traefik.http.routers.registry.tls.certresolver=letsencrypt' \
+{% if cert_from_file %}
+  --label "traefik.http.routers.registry.tls=true" \
+{% else %}
+  --label "traefik.http.routers.registry.tls.certresolver=letsencrypt" \
+{% endif %}
   --label 'traefik.http.routers.registry.middlewares=registry@docker' \
   --label 'traefik.http.middlewares.registry.basicauth.users={{ basic_auth_users }}' \
   docker.io/registry:2

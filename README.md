@@ -20,6 +20,7 @@ Create the file `vars.yaml`.
 
 ```
 registry_domain: registry.example.com
+cert_from_file: true
 ```
 
 ## Registry VM Setup
