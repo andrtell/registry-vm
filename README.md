@@ -5,7 +5,7 @@ VM with Docker Registry.
 
 Setup you VM using [traefik-vm](https://github.com/andrtell/traefik-vm).
 
-## Ansible VM
+## Ansible
 
 Create the file `inventory.yaml`.
 
