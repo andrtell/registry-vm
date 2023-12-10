@@ -28,7 +28,7 @@ cert_from_file: true
 Run the playbook `playbooks/01_registry.yaml`.
 
 ```
-$ ansible-playbook -i inventory.yaml --extra-vars "basic_auth_users=$(htpasswd -Bbn myuser mypassword)" --extra-vars "@vars.yaml" playbooks/01_registry.yaml
+ansible-playbook -i inventory.yaml --extra-vars "basic_auth_users=$(htpasswd -Bbn myuser mypassword)" --extra-vars "@vars.yaml" playbooks/01_registry.yaml
 ```
 
 ## Podman
@@ -36,7 +36,7 @@ $ ansible-playbook -i inventory.yaml --extra-vars "basic_auth_users=$(htpasswd -
 Login to your registry.
 
 ```
-$ podman login registry.example.com
+podman login registry.example.com
 ```
 
 ## Images
@@ -46,25 +46,25 @@ $ podman login registry.example.com
 Push an image to the new registry.
 
 ```
-$ podman pull docker.io/httpd
+podman pull docker.io/httpd
 ```
 
 ```
-$ podman tag docker.io/httpd registry.example.com/httpd
+podman tag docker.io/httpd registry.example.com/httpd
 ```
 
 ```
-$ podman push registry.example.com/httpd
+podman push registry.example.com/httpd
 ```
 
 Deploy the image.
 
 ```
-$ podman -r -c vm01 login registry.example.com
+podman -r -c vm01 login registry.example.com
 ```
 
 ```
-$ podman -r -c vm01 run -d --rm --name httpd --network traefik \
+podman -r -c vm01 run -d --rm --name httpd --network traefik \
     --label 'traefik.enable=true' \
     --label 'traefik.http.routers.myrouter.rule=PathPrefix(`/`)' \
     registry.example.com/httpd
