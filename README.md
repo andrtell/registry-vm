@@ -23,7 +23,7 @@ registry_domain: registry.example.com
 cert_from_file: true
 ```
 
-## Registry VM Setup
+## Registry VM
 
 Run the playbook `playbooks/01_registry.yaml`.
 
