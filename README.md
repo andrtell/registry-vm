@@ -61,7 +61,7 @@ Replace:
 Login to the registry using Podman.
 
 ```
-podman login <REGISTRY-DOMAIN> -u <USER> -p <PASSWORD> 
+podman login <REGISTRY-DOMAIN> -u <USERNAME> -p <PASSWORD> 
 ```
 
 **OK, all done!** 
