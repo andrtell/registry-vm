@@ -1,23 +1,21 @@
 # Registry VM
 
-Use [Ansible](https://docs.ansible.com/ansible/latest/index.html) to configure a remote machine running Ubuntu 22.04 LTS.
+Following the instructions in this repository you will configure a VM running Ubuntu 22.04 LTS
 
 Such that:
 
-- A Docker registry is installed and started as a SystemD user service.
-- The registry will require a login using Basic Auth (handled by Traefik).
+- A Docker registry is started on the VM.
+- Login will be required using Basic Auth (handled by Traefik).
 
-This repo requires you to first setup you VM using [Basic VM](https://github.com/andrtell/basic-vm) and then [Traefik VM](https://github.omc/andrtell/traefik-vm). 
+Before you start, you must first complete the setup in [Basic VM](https://github.com/andrtell/basic-vm) and [Traefik VM](https://github.omc/andrtell/traefik-vm). 
 
 ## Domain
 
-This repo assumes you have setup a domain with a wildcard sub-domain. See [Traefik VM](https://github.omc/andrtell/traefik-vm).
+You need to choose a sub-domain for you Docker registry (e.g. `registry.example.com`). 
 
-*Before you continue*
+The registry domain will be refered to as `<REGISTRY-DOMAIN>`.
 
-Choose a sub-domain for your registry (e.g. `registry.example.com`).
-
-There is no need to add a separate sub-domain to your DNS when using a wild-card subdomain.
+The top domain (e.g `example.com`) will be refered to as `<TOP-DOMAIN>`.
 
 ## Local setup
 
@@ -32,16 +30,13 @@ Create the file `inventory.yaml` in the root folder of this repo.
 ```
 ungrouped:
   hosts:
-    vm01:
-      ansible_host: <DOMAIN>
+    vm:
+      ansible_host: <TOP-DOMAIN>
 ```
-
-Replace 
-* `<DOMAIN>` with the top domain e.g. `example.com`.
 
 ## Remote Setup
 
-Basic auth requires some user data. The user data holds a username and a password. The userdata is created using `htpasswd`.
+Basic auth requires user data. The user data holds usernames and a passwords. Here `htpasswd -Bbn <USERNAME> <PASSWORD>` is used to create this data.
 
 *Before you continue*
 
@@ -51,12 +46,7 @@ Run the playbooks
 ansible-playbook -i inventory.yaml --extra-vars "basic_auth=$(htpasswd -Bbn <USERNAME> <PASSWORD>)" --extra-vars "domain=<REGISTRY-DOMAIN>" playbooks/*.yaml
 ```
 
-Replace:
-* `<REGISTRY-DOMAIN>` with the registry domain e.g. `registry.example.com`.
-* `<USERNAME>` with the registry username.
-* `<PASSWORD>` with the registry password.
-
-## Test it
+*Then make sure the registry is working*
 
 Login to the registry using Podman.
 
