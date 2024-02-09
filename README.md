@@ -48,7 +48,7 @@ Basic auth requires some user data. The user data holds a username and a passwor
 Run the playbooks
 
 ```
-ansible-playbook -i inventory.yaml --extra-vars "basic_auth=$(htpasswd -Bbn <USERNAME> <PASSWORD>)" --extra-vars "registry_domain=<REGISTRY-DOMAIN>" playbooks/*.yaml
+ansible-playbook -i inventory.yaml --extra-vars "basic_auth=$(htpasswd -Bbn <USERNAME> <PASSWORD>)" --extra-vars "domain=<REGISTRY-DOMAIN>" playbooks/*.yaml
 ```
 
 Replace:
