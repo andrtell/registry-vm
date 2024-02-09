@@ -48,7 +48,7 @@ Basic auth requires `user-file` (just a string in our case). To create the `user
 Run the playbooks
 
 ```
-ansible-playbook -i inventory.yaml --extra-vars "basic_auth=$(htpasswd -Bbn <USER> <PASSWORD>)" --extra-vars "registry_domain=<REGISTRY-DOMAIN>" playbooks/*.yaml
+ansible-playbook -i inventory.yaml --extra-vars "basic_auth=$(htpasswd -Bbn <USERNAME> <PASSWORD>)" --extra-vars "registry_domain=<REGISTRY-DOMAIN>" playbooks/*.yaml
 ```
 
 Replace:
