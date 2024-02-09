@@ -1,0 +1,36 @@
+[Unit]
+Description=Podman registry.service
+Documentation=man:podman-generate-systemd(1)
+Wants=network-online.target
+After=network-online.target traefik.service
+RequiresMountsFor=%t/containers
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=always
+TimeoutStopSec=70
+ExecStartPre=/bin/rm -f %t/%n.ctr-id
+ExecStart=/usr/bin/podman run \
+  --cidfile=%t/%n.ctr-id \
+  --cgroups=no-conmon \
+  --sdnotify=conmon \
+  --replace \
+  --rm \
+  -d \
+  --name registry \
+  --network traefik \
+  -v '/home/agent/registry/store:/var/lib/registry:rw' \
+  --label 'traefik.enable=true' \
+  --label 'traefik.http.routers.registry.entrypoints=websecure' \
+  --label 'traefik.http.routers.registry.rule=Host(`{{ domain }}`)' \
+  --label "traefik.http.routers.registry.tls.certresolver=letsencrypt" \
+  --label 'traefik.http.routers.registry.middlewares=registry@docker' \
+  --label 'traefik.http.middlewares.registry.basicauth.users={{ basic_auth }}' \
+  docker.io/registry:2
+ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
+ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
+Type=notify
+NotifyAccess=all
+
+[Install]
+WantedBy=default.target

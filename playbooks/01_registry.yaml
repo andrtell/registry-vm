@@ -1,0 +1,31 @@
+- name: Setup & start the registry service
+
+  hosts: all
+  remote_user: agent
+
+  tasks:
+    - name: Create registry directory
+      ansible.builtin.file:
+        path: '/home/agent/registry'
+        state: directory
+        mode: 0700
+
+    - name: Create store directory
+      ansible.builtin.file:
+        path: '/home/agent/registry/store'
+        state: directory
+        mode: 0700
+
+    - name: Copy registry service file
+      ansible.builtin.template:
+        src: registry.service.j2
+        dest: '/home/agent/.config/systemd/user/registry.service'
+        mode: 0400
+
+    - name: Start & enable registry service
+      ansible.builtin.systemd:
+        daemon_reload: true
+        enabled: true
+        name: registry
+        scope: user
+        state: restarted
