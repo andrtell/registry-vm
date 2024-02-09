@@ -11,11 +11,13 @@ This repo requires you to first setup you VM using [Basic VM](https://github.com
 
 ## Domain
 
-This repo assumes you have setup a domain with a wildcard sub-domain (see [Traefik VM](https://github.omc/andrtell/traefik-vm)).
+This repo assumes you have setup a domain with a wildcard sub-domain. See [Traefik VM](https://github.omc/andrtell/traefik-vm).
 
 *Before you continue*
 
-Pick a sub-domain for your registry (e.g. `registry.example.com`). There is no need to add a separate sub-domain to your DNS when using wild-card subdomains.
+Choose a sub-domain for your registry (e.g. `registry.example.com`).
+
+There is no need to add a separate sub-domain to your DNS when using a wild-card subdomain.
 
 ## Local setup
 
@@ -34,7 +36,8 @@ ungrouped:
       ansible_host: <DOMAIN>
 ```
 
-(Replace `<DOMAIN>` with your top domain e.g. `example.com`).
+Replace 
+* `<DOMAIN>` with the top domain e.g. `example.com`.
 
 ## Remote Setup
 
@@ -48,7 +51,10 @@ Run the playbooks
 ansible-playbook -i inventory.yaml --extra-vars "basic_auth=$(htpasswd -Bbn <USER> <PASSWORD>)" --extra-vars "registry_domain=<REGISTRY-DOMAIN>" playbooks/*.yaml
 ```
 
-(Replace `<REGISTRY-DOMAIN>` with your registry domain e.g. `registry.example.com`).
+Replace:
+* `<REGISTRY-DOMAIN>` with the registry domain e.g. `registry.example.com`.
+* `<USERNAME>` with the registry username.
+* `<PASSWORD>` with the registry password.
 
 ## Test it
 
