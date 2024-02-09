@@ -41,7 +41,7 @@ Replace
 
 ## Remote Setup
 
-Basic auth requires `user-file` (just a string in our case). To create the `user-file` we use `htpasswd`.
+Basic auth requires some user data. The user data holds a username and a password. The userdata is created using `htpasswd`.
 
 *Before you continue*
 
