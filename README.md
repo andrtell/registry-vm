@@ -54,4 +54,20 @@ Login to the registry using Podman.
 podman login <REGISTRY-DOMAIN> -u <USERNAME> -p <PASSWORD> 
 ```
 
+## Podman secret
+
+You can create a podman secret and use that secret to login to the registry.
+
+First create the secret.
+
+```
+printf "<PASSWORD>" | podman secret create "<USERNAME>" -
+```
+
+Then login to the registry using the secret.
+
+```
+podman login --secret=<USERNAME>
+```
+
 **OK, all done!** 
